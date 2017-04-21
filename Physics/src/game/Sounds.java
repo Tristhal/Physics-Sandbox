@@ -3,12 +3,13 @@ package game;
 import javax.sound.sampled.*;
 
 public class Sounds {
-	public static String name;
+	private String name;
 	private Clip clip;
 	
 	public Sounds(Clip c, String n){
 		name=n;
 		clip=c;		
+		System.out.println(name);
 	}
 	public Clip getClip(){
 		return clip;

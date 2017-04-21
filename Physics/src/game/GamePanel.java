@@ -20,24 +20,24 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	private boolean[]keys;//If the keys are pressed
 	private boolean mousepressed=false;//If the mouse is pressed down
 	private boolean mouseclicked=false;//If the was clicked
-	//----- Classes -----
+	//----- Classes -------
 	private GameFrame mainframe;//The GameFrame that created this GamePanel
 	//----- Variables -----
 	private int width=1280;
 	private int height=720;
-	//----- Menus -----
+	//----- Menus ---------
 	private Menus menus = new Menus(mainframe,this);
 	
     public GamePanel(GameFrame m) {
     	mainframe = m;
     	keys=new boolean[KeyEvent.KEY_LAST+1];//creates the array for keys
-    	//----- Listeners -----
+    	//----- Listeners -------
 		addMouseMotionListener(this);
 		addMouseListener(this);
 		addKeyListener(this);
-		//----- Variables -----
+		//----- Variables -------
 		//----- Load Images -----
-		//----- Load Music -----
+		//----- Load Music ------
     }
     @Override
     public void paintComponent(Graphics gg){
@@ -50,21 +50,21 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
     	g.setColor(new Color(255,255,255));
     	g.fillOval(mx-3, my-3, 5, 5);
     }
+ // ------------ Updates -------------------------------------------------- 
     public static int windowbarheight=29;
     public void update(){
-    	
     	mx= Math.max(0, Math.min(MouseInfo.getPointerInfo().getLocation().x-mainframe.getLocation().x, width-1));
     	my= Math.max(0, Math.min(MouseInfo.getPointerInfo().getLocation().y-mainframe.getLocation().y-windowbarheight, height-1));
-    	System.out.println(mx);
-    }
-    public void postupdate(){
-    	mouseclicked=false;
+    	//System.out.println(mx+" "+my);
     }
     public void updateMenus(){
     	menus.updateMenus(mx, my, mousepressed);    	
     }
- //   public void drawMenus(Graphics2D g){}
- // ------------ MouseListener ------------------------------------------
+    public void postupdate(){
+    	mouseclicked=false;
+    }
+    
+ // ------------ MouseListener --------------------------------------------
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
     public void mouseReleased(MouseEvent e) {
@@ -73,13 +73,13 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
     	
     }    
     public void mouseClicked(MouseEvent e){	
-    	System.out.println("hello");
+
     }
     public void mousePressed(MouseEvent e){
     	mousepressed=true;
     	mouseclicked=true;
 	}
-    // ---------- MouseMotionListener --------------------------------------
+    // ---------- MouseMotionListener -------------------------------------
     public void mouseDragged(MouseEvent e){
     	//mx=e.getX();
     	//my=e.getY();
@@ -90,7 +90,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
     	//mx=e.getX();
     	//my=e.getY();
     }
-   	// ---------- KeyListener -----------------------------------------------
+   	// ---------- KeyListener ---------------------------------------------
     public void keyTyped(KeyEvent e) {}
 
     public void keyPressed(KeyEvent e) {

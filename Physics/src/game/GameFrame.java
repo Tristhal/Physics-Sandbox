@@ -19,10 +19,9 @@ public class GameFrame extends JFrame implements ActionListener{
     	add(gamepanel);
 		setResizable(false);
 		setVisible(true);
+		
 		sounds.play("/S1.wav", "Sound 1");
-		sounds.play("/S5.wav", "AMD");
-		sounds.changeVolume(1f,"AMD");
-		sounds.changeVolume(.5f,"Sound 1");
+		
 		myTimer = new Timer(30, this);
 		myTimer.start();
 		///---------- Variables ----------
