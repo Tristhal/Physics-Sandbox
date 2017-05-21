@@ -3,7 +3,7 @@
  * 
 */
 //Packages///
-package game;
+package sound;
 //Import statements///
 import java.applet.Applet;
 import java.applet.AudioClip;
@@ -14,21 +14,21 @@ import java.util.ArrayList;
 
 import javax.sound.sampled.*;
 ///Main Class///
-public class Sound {
+public class Sounds {
 	///
 	private ArrayList<Clip> clips = new ArrayList<Clip>();
 	//private FloatControl gainControl;
-	private ArrayList<Sounds> sounds = new ArrayList<Sounds>();
-    public Sound() {
+	private ArrayList<Sound> sounds = new ArrayList<Sound>();
+    public Sounds() {
     }
     
     public void play(String filename, String name){
     	try{
-    		URL soundurl = Sound.class.getResource(filename);
+    		URL soundurl = Sounds.class.getResource(filename);
 	    	AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundurl);
 	        Clip clip = AudioSystem.getClip();
 	        //clips.add(clip);
-	        sounds.add(new Sounds(clip, name));
+	        sounds.add(new Sound(clip, name));
 	        sounds.get(sounds.size()-1).getClip().open(audioInputStream);
 	        sounds.get(sounds.size()-1).getClip().setFramePosition(0);
 	        sounds.get(sounds.size()-1).getClip().start();

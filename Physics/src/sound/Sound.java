@@ -1,12 +1,12 @@
-package game;
+package sound;
 
 import javax.sound.sampled.*;
 
-public class Sounds {
+public class Sound {
 	private String name;
 	private Clip clip;
 	
-	public Sounds(Clip c, String n){
+	public Sound(Clip c, String n){
 		name=n;
 		clip=c;		
 		System.out.println(name);

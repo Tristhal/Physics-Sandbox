@@ -102,15 +102,17 @@ public class paint{
     // ------------ Rectangles----------------------------------------------             
 	public static void drawRect(Graphics2D g,int x,int y,int width, int height, int thickness, Color color){//hollow
 		g.setColor(color);
+		Stroke oldStroke = g.getStroke();
 		g.setStroke(new BasicStroke(thickness));
-		g.drawRect(x,y,width,height);
+		g.drawRect(x+thickness/2,y+thickness/2,width-thickness,height-thickness);
+		g.setStroke(oldStroke);
 	}
 	public static void drawRect(Graphics2D g,int x,int y,int width, int height, int thickness, Color color,float alpha){//Transparent,hollow
 		g.setColor(color);
 		g.setStroke(new BasicStroke(thickness));
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                     alpha));
-		g.drawRect(x,y,width,height);
+		g.drawRect(x+thickness/2,y+thickness/2,width-thickness,height-thickness);
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                     1.0f));
 	}
