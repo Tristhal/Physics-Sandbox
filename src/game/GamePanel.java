@@ -26,6 +26,9 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 	//----- Main Variables -
 	private int width;
 	private int height;
+	int windowheightoffset = 37;
+	int windowwidthoffset = 8;
+	double gravity = 9.8/60;
 	//----- Menus ----------
 	//----- Variables-------
 	BaseLine testline;
@@ -49,15 +52,29 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 		//----- Load Music ------
 		//----- Variables -------
 		objects = new ArrayList<PhysicsObject>();
-		testline = new BaseLine(100,100,200,200);
-		testpoint = new BasePoint(150,150);
-		testpoint.setVelY(1.1);
-		testpoint.setStationary(false);
-		//testline.setAccelY(.01);
-		//testline.setStationary(false);
+		//Obstacles
+		testline = new BaseLine(000,200,100,550);
+		testline.setStationary(false);
+		testline.addVelX(2);
 		objects.add(testline);
+		testline = new BaseLine(500,500,mainframe.getScreenWidth(),mainframe.getScreenHeight());
+		objects.add(testline);
+		//Walls  
+		testline = new BaseLine(1,1,2,mainframe.getScreenHeight());
+		objects.add(testline);
+		testline = new BaseLine(1,1,mainframe.getScreenWidth()-8,1);
+		objects.add(testline);
+		testline = new BaseLine(mainframe.getScreenWidth()-8,1,mainframe.getScreenWidth()-7,mainframe.getScreenHeight()-1);
+		objects.add(testline);
+		testline = new BaseLine(1,mainframe.getScreenHeight()-37,mainframe.getScreenWidth()-8,mainframe.getScreenHeight()-37);
+		objects.add(testline);
+		//Points
+		testpoint = new BasePoint(150,150);
+		testpoint.setStationary(false);
+		testpoint.setVelY(1.1);
+		testpoint.setAccelY(gravity);
 		objects.add(testpoint);
-		objects.get(0).printType(objects.get(1));
+		//objects.get(0).printType(objects.get(1));
     }
 	//////////////////////////////////////////////////
 	/// Draw Functions
@@ -70,8 +87,9 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
     	/// Draw Functions ///
     	//menus.drawMenus(g);
     	/// Rest ///
-    	testline.drawBaseLine(g);
-    	testpoint.drawBasePoint(g);
+    	for(PhysicsObject obj: objects){
+    		obj.drawSelf(g);
+    	}
     	g.setColor(new Color(255,255,255));
     	g.fillOval(mx-3, my-3, 5, 5);
     }
@@ -87,17 +105,36 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
     public void update(){
     	mx = Math.max(0, Math.min(MouseInfo.getPointerInfo().getLocation().x-mainframe.getLocation().x, width-1));
     	my = Math.max(0, Math.min(MouseInfo.getPointerInfo().getLocation().y-mainframe.getLocation().y-windowbarheight, height-1));
+    	if(!mouseclicked == true){
+    		testpoint = new BasePoint(mx,my);
+    		testpoint.setStationary(false);
+    		testpoint.setVelX(-10);
+    		testpoint.setAccelY(gravity);
+    		objects.add(testpoint);
+    	}
     }
     public void updateMenus(){
     	menus.updateMenus(mx, my, mousepressed);    	
     }
     public void objectMove(){
-    	testpoint.collideWith(testline);
+    	System.out.println(objects.size());
+    	for(PhysicsObject obj1: objects){
+    		if(!obj1.getStationary()){
+    			for(PhysicsObject obj2: objects){
+    				if(obj1 != obj2){
+    					obj1.collideWith(obj2);
+    				}
+    			}
+    		}
+    	}
     	for(PhysicsObject obj: objects){
-    		obj.updateAccelerate();
+    		obj.updateCollide();
     	}
     	for(PhysicsObject obj: objects){
     		obj.updateMove();
+    	}
+    	for(PhysicsObject obj: objects){
+    		obj.updateAccelerate();
     	}
     }
     

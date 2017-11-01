@@ -7,9 +7,12 @@ import java.awt.geom.Point2D.Double;
 import modules.paint;
 
 public class BaseLine extends PhysicsObject{
+	//Position variables
 	double velx, vely, accelx, accely, timeinterval;
 	private BasePoint point1, point2;
+	//Characteristics variables
 	private boolean stationary;
+	private int mass = 1000000;
 	
 	public BaseLine(){
 		stationary = true;
@@ -22,7 +25,7 @@ public class BaseLine extends PhysicsObject{
 	public BaseLine(double px1, double py1, double px2, double py2){
 		stationary = true;
 		/// Variables ///
-		point1 = new BasePoint(px1, py2);
+		point1 = new BasePoint(px1, py1);
 		point2 = new BasePoint(px2, py2);
 		velx = 0;
 		vely = 0;
@@ -34,18 +37,25 @@ public class BaseLine extends PhysicsObject{
 	/// Collision Functions
 	//////////////////////////////////////////////////
 	@Override
-	void collideWith(BaseLine line) {
+	boolean collideWith(BaseLine line) {
 		// TODO Auto-generated method stub
-		
+		if(point1.collideWith(this)){
+			return true;
+		}
+		else if(point2.collideWith(this)){
+			return true;
+		}
+		return false;
 	}
 	@Override
-	void collideWith(BasePoint point) {
+	boolean collideWith(BasePoint point) {
 		// TODO Auto-generated method stub
-		
+		point.collideWith(this);
+		return false;
 	}
 	@Override
-	void collideWith(PhysicsObject obj) {
-		obj.collideWith(this);
+	boolean collideWith(PhysicsObject obj) {
+		return obj.collideWith(this);
 	}
 	//////////////////////////////////////////////////
 	/// Update Functions
@@ -63,23 +73,28 @@ public class BaseLine extends PhysicsObject{
 			vely = 0;
 		}
 	}
-	public void updateAccelerate(){
+	void updateAccelerate(){
 		point1.updateAccelerate();
 		point2.updateAccelerate();
+	}
+	void updateCollide(){
+		
 	}
 	//////////////////////////////////////////////////
 	/// Draw Functions
 	//////////////////////////////////////////////////
-	public void drawBaseLine(Graphics2D g){
+	public void drawSelf(Graphics2D g){
 		paint.drawAALine(g, (int)point1.getPosX(), (int)point1.getPosY(),
 				(int)point2.getPosX(), (int)point2.getPosY(), 1, Color.red);
-		point1.drawBasePoint(g);
-		point2.drawBasePoint(g);
+		point1.drawSelf(g);
+		point2.drawSelf(g);
 	}
 	//////////////////////////////////////////////////
 	/// Get/Set Functions
 	//////////////////////////////////////////////////
-	
+	void getSelf(PhysicsObject obj){
+		obj.setVarLine(this);
+	}
 	/// Points ///
 	BasePoint getPoint1(){
 		return point1;
@@ -153,11 +168,20 @@ public class BaseLine extends PhysicsObject{
 		accely += x;
 		syncAccelY();
 	}
+	int getMass(){
+		return mass;
+	}
+	double getNormalAngle(){
+		return Math.atan2(-(point2.getPosX()-point1.getPosX()),(point2.getPosY()-point1.getPosY()));
+	}
 	/// Other ///
 	void setStationary(boolean b){
 		stationary = b;
 		point1.setStationary(b);
 		point2.setStationary(b);
+	}
+	boolean getStationary(){
+		return stationary;
 	}
 	/// Debug ///
 	@Override
@@ -169,6 +193,9 @@ public class BaseLine extends PhysicsObject{
 	void printType(BasePoint point) {
 		System.out.println("This: Line, That: Point");
 		
+	}
+	void printType(Circle c){
+		System.out.println("This: Line, That: Circle");
 	}
 	void printType(PhysicsObject object) {
 		System.out.println("Object call from line");
