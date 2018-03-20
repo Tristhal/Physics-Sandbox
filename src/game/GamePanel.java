@@ -59,6 +59,9 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 		objects.add(testline);
 		testline = new BaseLine(500,500,mainframe.getScreenWidth(),mainframe.getScreenHeight());
 		objects.add(testline);
+		testline = new BaseLine(500,500,10,300,.05f);
+		testline.setStationary(false);
+		objects.add(testline);
 		//Walls  
 		testline = new BaseLine(1,1,2,mainframe.getScreenHeight());
 		objects.add(testline);
@@ -69,12 +72,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
 		testline = new BaseLine(1,mainframe.getScreenHeight()-37,mainframe.getScreenWidth()-8,mainframe.getScreenHeight()-37);
 		objects.add(testline);
 		//Points
-		testpoint = new BasePoint(150,150);
-		testpoint.setStationary(false);
-		testpoint.setVelY(1.1);
-		testpoint.setAccelY(gravity);
-		objects.add(testpoint);
-		//objects.get(0).printType(objects.get(1));
+		
     }
 	//////////////////////////////////////////////////
 	/// Draw Functions
@@ -105,7 +103,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
     public void update(){
     	mx = Math.max(0, Math.min(MouseInfo.getPointerInfo().getLocation().x-mainframe.getLocation().x, width-1));
     	my = Math.max(0, Math.min(MouseInfo.getPointerInfo().getLocation().y-mainframe.getLocation().y-windowbarheight, height-1));
-    	if(!mouseclicked == true){
+    	if(mouseclicked == true){
     		testpoint = new BasePoint(mx,my);
     		testpoint.setStationary(false);
     		testpoint.setVelX(-10);
@@ -117,7 +115,7 @@ public class GamePanel extends JPanel implements MouseMotionListener, MouseListe
     	menus.updateMenus(mx, my, mousepressed);    	
     }
     public void objectMove(){
-    	System.out.println(objects.size());
+    	//System.out.println(objects.size());
     	for(PhysicsObject obj1: objects){
     		if(!obj1.getStationary()){
     			for(PhysicsObject obj2: objects){

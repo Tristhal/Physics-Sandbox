@@ -1,37 +1,46 @@
 package game;
 
 import java.awt.Color;
+
+
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import modules.paint;
+import modules.utilityfunc;
 
 public class BaseLine extends PhysicsObject{
 	//Position variables
-	double velx, vely, accelx, accely, timeinterval;
-	private BasePoint point1, point2;
+	double velx = 0, vely = 0, accelx = 0, accely = 0, timeinterval;
+	float w, orientation;
+	private BasePoint point1, point2, cm = new BasePoint();
 	//Characteristics variables
 	private boolean stationary;
-	private int mass = 1000000;
+	private int mass = 10;
+	private double length;
 	
 	public BaseLine(){
 		stationary = true;
-		velx = 0;
-		vely = 0;
-		accely = 0;
-		accelx = 0;
-		timeinterval = 1;
+		w = -1;
 	}
 	public BaseLine(double px1, double py1, double px2, double py2){
 		stationary = true;
 		/// Variables ///
 		point1 = new BasePoint(px1, py1);
 		point2 = new BasePoint(px2, py2);
-		velx = 0;
-		vely = 0;
-		accely = 0;
-		accelx = 0;
-		timeinterval = 1;
+		w = -1;
+	}
+	public BaseLine(double px, double py, float angle, double l, float rotation){
+		stationary = true;
+		/// Variables ///
+		cm = new BasePoint(px,py);
+		length = l;
+		orientation = angle;
+		w = rotation;
+		point1 = new BasePoint(px+length/2*utilityfunc.cos(orientation),
+				py-length/2*utilityfunc.sin(orientation));		
+		point2 = new BasePoint(px-length/2*utilityfunc.cos(orientation),
+				py+length/2*utilityfunc.sin(orientation));
 	}
 	//////////////////////////////////////////////////
 	/// Collision Functions
@@ -54,6 +63,11 @@ public class BaseLine extends PhysicsObject{
 		return false;
 	}
 	@Override
+	boolean collideWith(Circle circle) {
+		
+		return false;
+	}
+	@Override
 	boolean collideWith(PhysicsObject obj) {
 		return obj.collideWith(this);
 	}
@@ -61,12 +75,32 @@ public class BaseLine extends PhysicsObject{
 	/// Update Functions
 	//////////////////////////////////////////////////
 	void preUpdate(){
-		
+		if(w > 0) {
+			
+			point1.setPosX(cm.getPosX()+length/2*Math.sin(getNormalAngle()));
+			point1.setPosY(cm.getPosY()-length/2*Math.cos(getNormalAngle()));		
+			point2.setPosX(cm.getPosX()-length/2*Math.sin(getNormalAngle()));
+			point2.setPosY(cm.getPosY()+length/2*Math.cos(getNormalAngle()));
+			point1.setVelX(w*length/2*Math.cos(getNormalAngle()));
+			velx = w*length/2*Math.cos(getNormalAngle());
+			vely = w*length/2*Math.sin(getNormalAngle());
+			point2.setVelX(-w*length/2*Math.cos(getNormalAngle()));
+			point1.setVelY(w*length/2*Math.sin(getNormalAngle()));
+			point2.setVelY(-w*length/2*Math.sin(getNormalAngle()));
+
+		}
 	}
 	void updateMove(){
 		if(!stationary){
-			point1.updateMove();
-			point2.updateMove();
+			if(w > 0) {
+				cm.updateMove();
+				point1.updateMove();
+				point2.updateMove();
+			}
+			else {
+				point1.updateMove();
+				point2.updateMove();
+			}
 		}
 		else{
 			velx = 0;
@@ -74,8 +108,11 @@ public class BaseLine extends PhysicsObject{
 		}
 	}
 	void updateAccelerate(){
+		
 		point1.updateAccelerate();
 		point2.updateAccelerate();
+		cm.updateAccelerate();
+		
 	}
 	void updateCollide(){
 		
@@ -107,10 +144,12 @@ public class BaseLine extends PhysicsObject{
 	void syncVelX(){
 		point1.setVelX(velx);
 		point2.setVelX(velx);
+		cm.setVelX(velx);
 	}
 	void syncVelY(){
 		point1.setVelY(vely);
 		point2.setVelY(vely);
+		cm.setVelY(vely);
 	}
 	double getVelX(){
 		return velx;
@@ -141,10 +180,12 @@ public class BaseLine extends PhysicsObject{
 	void syncAccelX(){
 		point1.setAccelX(accelx);
 		point2.setAccelX(accelx);
+		cm.setAccelX(accelx);
 	}
 	void syncAccelY(){
 		point1.setAccelY(accely);
-		point2.setAccelY(accely);		
+		point2.setAccelY(accely);
+		cm.setAccelY(accely);
 	}
 	double getAccelX(){
 		return accelx;
@@ -179,6 +220,7 @@ public class BaseLine extends PhysicsObject{
 		stationary = b;
 		point1.setStationary(b);
 		point2.setStationary(b);
+		cm.setStationary(b);
 	}
 	boolean getStationary(){
 		return stationary;

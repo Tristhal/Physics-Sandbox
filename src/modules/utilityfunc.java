@@ -4,7 +4,34 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 
 public class utilityfunc {
-	
+	public utilityfunc() {
+		
+	}
+	//Fast Sin/Cos
+	static final int precision = 10000; // gradations per degree, adjust to suit
+
+	static final int modulus = 360*precision;
+	static final float[] sin = new float[modulus]; // lookup table
+	static { 
+	    // a static initializer fills the table
+	    // in this implementation, units are in degrees
+	    for (int i = 0; i<sin.length; i++) {
+	        sin[i]=(float)Math.sin((i*Math.PI)/(precision*180));
+	    }
+	}
+	// Private function for table lookup
+	private static float sinLookup(int a) {
+	    return a>=0 ? sin[a%(modulus)] : -sin[-a%(modulus)];
+	}
+
+	// These are your working functions:
+	public static double sin(float a) {
+	    return (double)sinLookup((int)(a * precision + 0.5f));
+	}
+	public static double cos(float a) {
+	    return (double)sinLookup((int)((a+90f) * precision + 0.5f));
+	}
+	//---------------------------------------------------------
 	public static double min(double a, double b){
 		return a<b? a:b;
 	}

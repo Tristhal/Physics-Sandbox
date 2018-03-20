@@ -9,6 +9,7 @@ public abstract class PhysicsObject {
 	}
 	abstract boolean collideWith(BaseLine line);
 	abstract boolean collideWith(BasePoint point);
+	abstract boolean collideWith(Circle circle);
 	abstract boolean collideWith(PhysicsObject obj);
 	abstract void updateCollide();
 	abstract void updateMove();
